@@ -187,7 +187,7 @@
               <p id="explanation"></p>
             </div>
             <div class="quiz-bottom">
-              <span class="keyboard-note"><kbd>1</kbd>–<kbd>4</kbd> 또는 <kbd>A</kbd>–<kbd>D</kbd> 선택 <span aria-hidden="true">·</span> <kbd>Enter</kbd> 다음</span>
+              <span class="keyboard-note"><kbd>1</kbd>–<kbd>4</kbd> 또는 <kbd>A</kbd>–<kbd>D</kbd> 선택 <span aria-hidden="true">·</span> <kbd>Enter</kbd> 다음 <span aria-hidden="true">·</span> 퀴즈 영역에 포커스가 있을 때</span>
               <button class="primary" id="next" disabled>다음 질문 <span class="arrow" aria-hidden="true">→</span></button>
             </div>
           </div>
@@ -387,6 +387,8 @@
       const target = event.target;
       if (target instanceof Element && target.closest("input, textarea, select, [contenteditable]")) return;
       if (get("question-screen").hidden) return;
+      // WCAG 2.1.4: 문자 단축키는 퀴즈 영역에 포커스가 있을 때만 동작
+      if (!(target instanceof Element && get("question-screen").contains(target))) return;
       if (!answered) {
         const key = event.key.toLowerCase();
         const index = "1234".includes(key) && key.length === 1 ? Number(key) - 1 : "abcd".includes(key) && key.length === 1 ? key.charCodeAt(0) - 97 : -1;
