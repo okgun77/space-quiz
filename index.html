@@ -187,7 +187,7 @@
               <p id="explanation"></p>
             </div>
             <div class="quiz-bottom">
-              <span class="keyboard-note"><kbd>Tab</kbd> 이동 <span aria-hidden="true">·</span> <kbd>Enter</kbd> 선택</span>
+              <span class="keyboard-note"><kbd>1</kbd>–<kbd>4</kbd> 또는 <kbd>A</kbd>–<kbd>D</kbd> 선택 <span aria-hidden="true">·</span> <kbd>Enter</kbd> 다음</span>
               <button class="primary" id="next" disabled>다음 질문 <span class="arrow" aria-hidden="true">→</span></button>
             </div>
           </div>
@@ -381,6 +381,23 @@
       get("result-screen").hidden = true;
       get("question-screen").hidden = false;
       renderQuestion(true);
+    });
+    document.addEventListener("keydown", event => {
+      if (event.defaultPrevented || event.ctrlKey || event.altKey || event.metaKey || event.isComposing || event.repeat) return;
+      const target = event.target;
+      if (target instanceof Element && target.closest("input, textarea, select, [contenteditable]")) return;
+      if (get("question-screen").hidden) return;
+      if (!answered) {
+        const key = event.key.toLowerCase();
+        const index = "1234".includes(key) && key.length === 1 ? Number(key) - 1 : "abcd".includes(key) && key.length === 1 ? key.charCodeAt(0) - 97 : -1;
+        if (index >= 0 && index < questions[current].answers.length) {
+          event.preventDefault();
+          selectAnswer(index);
+        }
+      } else if (event.key === "Enter" && !(target instanceof Element && target.closest("button, a"))) {
+        event.preventDefault();
+        get("next").click();
+      }
     });
     renderQuestion();
   </script>
