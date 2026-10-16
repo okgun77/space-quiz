@@ -390,6 +390,7 @@
       // WCAG 2.1.4: 문자 단축키는 퀴즈 영역에 포커스가 있을 때만 동작
       if (!(target instanceof Element && get("question-screen").contains(target))) return;
       if (!answered) {
+        if (!(target instanceof Element) || !target.closest("#answers .answer")) return;
         const key = event.key.toLowerCase();
         const index = "1234".includes(key) && key.length === 1 ? Number(key) - 1 : "abcd".includes(key) && key.length === 1 ? key.charCodeAt(0) - 97 : -1;
         if (index >= 0 && index < questions[current].answers.length) {
